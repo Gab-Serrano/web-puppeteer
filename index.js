@@ -1,4 +1,4 @@
-import puppeteer from "puppeteer";
+const puppeteer = require('puppeteer');
 
 class Receta {
   constructor(titulo, imagen, url, recipeData, specialNeeds, nutritionalInfo, additionalInfo, recipeIngredients, recipeCategory, recipeInstructions) {
@@ -25,7 +25,7 @@ async function getDataFromWebPage() {
     'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
   });
 
-  await page.goto("https://www.nestlecocina.es/receta/bocadillo-de-sensational-sausage");
+  await page.goto("https://www.nestlecocina.es/receta/pate-de-vuna");
 
   const data = await page.evaluate(() => {
     const title = document.querySelector("h1").innerText;
@@ -33,42 +33,46 @@ async function getDataFromWebPage() {
     const imagen = metaTagsImage.length > 0 ? metaTagsImage[0].getAttribute("content") : null;
     const metaTagsUrl = Array.from(document.querySelectorAll("meta[property='og:url']"));
     const url = metaTagsUrl.length > 0 ? metaTagsUrl[0].getAttribute("content") : null;
-    
+
     const recipeDataElement = document.querySelector(".recipe_data");
-    const difficulty = recipeDataElement.querySelector(".difficulty").innerText.trim();
-    const persons = recipeDataElement.querySelector(".persons").innerText.replace(/\n/g, ' ').trim();
-    const timeM20 = recipeDataElement.querySelector(".time.m20").innerText.replace(/\n/g, ' ').trim();
-    const timeM15 = recipeDataElement.querySelector(".time.m15").innerText.replace(/\n/g, ' ').trim();
+    const difficulty = recipeDataElement.querySelector("span:nth-child(1)").innerText.trim();
+    const portions = recipeDataElement.querySelector("span:nth-child(2)").innerText.replace(/\n/g, ' ').trim();
     
+    const prepTimeElement = recipeDataElement.querySelector("span:nth-child(3)");
+    const prepTime = prepTimeElement ? prepTimeElement.innerText.replace(/\n/g, ' ').trim() : '0 min.';
+    
+    const cookTimeElement = recipeDataElement.querySelector("span:nth-child(4)");
+    const cookTime = cookTimeElement ? cookTimeElement.innerText.replace(/\n/g, ' ').trim() : '0 min.';
+
     const specialNeedsElement = document.querySelector(".special_needs_container");
     const specialNeeds = specialNeedsElement ? Array.from(specialNeedsElement.querySelectorAll("span")).map(span => span.innerText) : [];
-    
+
     const nutritionalInfoElement = document.querySelector(".nutrition_content");
     const kcalRation = nutritionalInfoElement.querySelector(".kcal_ration span").innerText;
     const fats = Array.from(nutritionalInfoElement.querySelectorAll(".fats td")).map(td => td.innerText);
     const hydrates = Array.from(nutritionalInfoElement.querySelectorAll(".hydrates td")).map(td => td.innerText);
     const proteins = Array.from(nutritionalInfoElement.querySelectorAll(".proteins td")).map(td => td.innerText);
-    
+
     // New: Scraping additional nutritional information
     const additionalInfoElement = document.querySelector(".nutrition_data");
     const sugars = additionalInfoElement.querySelector("td:nth-child(2)").innerText;
     const fiber = additionalInfoElement.querySelector("tr:nth-child(2) td:nth-child(2)").innerText;
     const saturatedFats = additionalInfoElement.querySelector("tr:nth-child(3) td:nth-child(2)").innerText;
     const salt = additionalInfoElement.querySelector("tr:nth-child(4) td:nth-child(2)").innerText;
-    
+
     // New: Scraping recipe ingredients
     const recipeIngredientsElement = document.querySelector(".dropdown_content.ingredients");
     const recipeIngredients = recipeIngredientsElement ? Array.from(recipeIngredientsElement.querySelectorAll("ul li")).map(li => li.innerText) : [];
-    
+
     // New: Scraping recipe category
     const keywordsMeta = document.querySelector("meta[name='keywords']").getAttribute("content");
     const recipeCategory = keywordsMeta.split(",").map(keyword => keyword.trim());
-    
+
     // New: Scraping recipe instructions
     const recipeInstructionsElement = document.querySelector(".dropdown_content.elaboration_text");
     const recipeInstructions = recipeInstructionsElement ? Array.from(recipeInstructionsElement.querySelectorAll("p")).map(p => p.innerText) : [];
 
-    return { title, imagen, url, recipeData: { difficulty, persons, timeM20, timeM15 }, specialNeeds, nutritionalInfo: { kcalRation, fats, hydrates, proteins }, additionalInfo: { sugars, fiber, saturatedFats, salt }, recipeIngredients, recipeCategory, recipeInstructions };
+    return { title, imagen, url, recipeData: { difficulty, portions, prepTime, cookTime }, specialNeeds, nutritionalInfo: { kcalRation, fats, hydrates, proteins }, additionalInfo: { sugars, fiber, saturatedFats, salt }, recipeIngredients, recipeCategory, recipeInstructions };
   });
 
   await browser.close();
