@@ -28,7 +28,7 @@ const recipeSchema = new Schema({
             maxlength: 255
         },
         yield: {
-            type: Number,
+            type: String,
             required: true,
         },
         preparationTime: {
