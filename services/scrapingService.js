@@ -3,7 +3,6 @@ const puppeteer = require("puppeteer");
 
 exports.scrapeDataFromUrl = async (url) => {
   const data = await getDataFromWebPage(url);
-  console.log(data.nutritionalInfo.carbohydrates);
   try {
     const newRecipe = await Recipe.create(data);
     //const newRecipe = Recipe(data);
