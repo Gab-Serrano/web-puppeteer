@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 
 class Receta {
-  constructor(titulo, imagen, url, recipeData, specialNeeds, nutritionalInfo, additionalInfo, recipeIngredients, recipeCategory, recipeInstructions) {
+  constructor(titulo, imagen, url, recipeData, specialNeeds, nutritionalInfo, additionalInfo, recipeIngredients, recipeCategory, recipeInstructions, yieldPerAge) {
     this.titulo = titulo;
     this.imagen = imagen;
     this.url = url;
@@ -12,6 +12,7 @@ class Receta {
     this.recipeIngredients = recipeIngredients;
     this.recipeCategory = recipeCategory;
     this.recipeInstructions = recipeInstructions;
+    this.yieldPerAge = yieldPerAge;
   }
 }
 
@@ -25,7 +26,7 @@ async function getDataFromWebPage() {
     'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
   });
 
-  await page.goto("https://www.nestlecocina.es/receta/pate-de-vuna");
+  await page.goto("https://www.nestlecocina.es/receta/brandada-de-vuna");
 
   const data = await page.evaluate(() => {
     const title = document.querySelector("h1").innerText;
@@ -72,12 +73,19 @@ async function getDataFromWebPage() {
     const recipeInstructionsElement = document.querySelector(".dropdown_content.elaboration_text");
     const recipeInstructions = recipeInstructionsElement ? Array.from(recipeInstructionsElement.querySelectorAll("p")).map(p => p.innerText) : [];
 
-    return { title, imagen, url, recipeData: { difficulty, portions, prepTime, cookTime }, specialNeeds, nutritionalInfo: { kcalRation, fats, hydrates, proteins }, additionalInfo: { sugars, fiber, saturatedFats, salt }, recipeIngredients, recipeCategory, recipeInstructions };
+    // New: Scraping portions by age
+    const portionByAgeElement = document.querySelector(".dishes_container");
+    const adultPortion = portionByAgeElement.querySelector(".adult p.text").innerText;
+    const threeToEightPortion = portionByAgeElement.querySelector(".child p.text").innerText;
+    const nineToTwelvePortion = portionByAgeElement.querySelector(".preteen p.text").innerText;
+    const teenPortion = portionByAgeElement.querySelector(".teen p.text").innerText;
+
+    return { title, imagen, url, recipeData: { difficulty, portions, prepTime, cookTime }, specialNeeds, nutritionalInfo: { kcalRation, fats, hydrates, proteins }, additionalInfo: { sugars, fiber, saturatedFats, salt }, recipeIngredients, recipeCategory, recipeInstructions, yieldPerAge: { adult: adultPortion, threeToEight: threeToEightPortion, nineToTwelve: nineToTwelvePortion, teen: teenPortion } };
   });
 
   await browser.close();
 
-  const receta = new Receta(data.title, data.imagen, data.url, data.recipeData, data.specialNeeds, data.nutritionalInfo, data.additionalInfo, data.recipeIngredients, data.recipeCategory, data.recipeInstructions);
+  const receta = new Receta(data.title, data.imagen, data.url, data.recipeData, data.specialNeeds, data.nutritionalInfo, data.additionalInfo, data.recipeIngredients, data.recipeCategory, data.recipeInstructions, data.yieldPerAge);
   return receta;
 }
 
@@ -92,6 +100,7 @@ getDataFromWebPage().then(receta => {
   console.log("Ingredientes de la receta:", receta.recipeIngredients);
   console.log("Categoría de la receta:", receta.recipeCategory);
   console.log("Instrucciones de la receta:", receta.recipeInstructions);
+  console.log("Porciones por edad:", receta.yieldPerAge);
 }).catch(error => {
   console.error("Error:", error);
 });
