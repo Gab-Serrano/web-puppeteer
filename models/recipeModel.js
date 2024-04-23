@@ -90,7 +90,7 @@ const recipeSchema = new Schema({
         required: true
     },
     chefTips: {
-        type: [String],
+        type: String,
         required: false
     },
     tags: {
