@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 
 class Receta {
-  constructor(titulo, imagen, url, recipeData, specialNeeds, nutritionalInfo, additionalInfo, recipeIngredients, recipeCategory, recipeInstructions, yieldPerAge) {
+  constructor(titulo, imagen, url, recipeData, specialNeeds, nutritionalInfo, additionalInfo, recipeIngredients, recipeCategory, recipeInstructions, yieldPerAge, chefTips) {
     this.titulo = titulo;
     this.imagen = imagen;
     this.url = url;
@@ -13,6 +13,7 @@ class Receta {
     this.recipeCategory = recipeCategory;
     this.recipeInstructions = recipeInstructions;
     this.yieldPerAge = yieldPerAge;
+    this.chefTips = chefTips;
   }
 }
 
@@ -79,28 +80,20 @@ async function getDataFromWebPage() {
     const threeToEightPortion = portionByAgeElement.querySelector(".child p.text").innerText;
     const nineToTwelvePortion = portionByAgeElement.querySelector(".preteen p.text").innerText;
     const teenPortion = portionByAgeElement.querySelector(".teen p.text").innerText;
+    // New: cheftips
+    const chefTips = document.querySelector(".chef_trick > span").nextSibling.textContent.trim();
 
-    return { title, imagen, url, recipeData: { difficulty, portions, prepTime, cookTime }, specialNeeds, nutritionalInfo: { kcalRation, fats, hydrates, proteins }, additionalInfo: { sugars, fiber, saturatedFats, salt }, recipeIngredients, recipeCategory, recipeInstructions, yieldPerAge: { adult: adultPortion, threeToEight: threeToEightPortion, nineToTwelve: nineToTwelvePortion, teen: teenPortion } };
+    return { title, imagen, url, recipeData: { difficulty, portions, prepTime, cookTime }, specialNeeds, nutritionalInfo: { kcalRation, fats, hydrates, proteins }, additionalInfo: { sugars, fiber, saturatedFats, salt }, recipeIngredients, recipeCategory, recipeInstructions, yieldPerAge: { adult: adultPortion, threeToEight: threeToEightPortion, nineToTwelve: nineToTwelvePortion, teen: teenPortion },chefTips };
   });
 
   await browser.close();
 
-  const receta = new Receta(data.title, data.imagen, data.url, data.recipeData, data.specialNeeds, data.nutritionalInfo, data.additionalInfo, data.recipeIngredients, data.recipeCategory, data.recipeInstructions, data.yieldPerAge);
+  const receta = new Receta(data.title, data.imagen, data.url, data.recipeData, data.specialNeeds, data.nutritionalInfo, data.additionalInfo, data.recipeIngredients, data.recipeCategory, data.recipeInstructions, data.yieldPerAge, data.chefTips);
   return receta;
 }
 
 getDataFromWebPage().then(receta => {
-  console.log("Título:", receta.titulo);
-  console.log("Imagen:", receta.imagen);
-  console.log("URL:", receta.url);
-  console.log("Datos de la receta:", receta.recipeData);
-  console.log("Necesidades especiales:", receta.specialNeeds);
-  console.log("Información nutricional:", receta.nutritionalInfo);
-  console.log("Información adicional:", receta.additionalInfo);
-  console.log("Ingredientes de la receta:", receta.recipeIngredients);
-  console.log("Categoría de la receta:", receta.recipeCategory);
-  console.log("Instrucciones de la receta:", receta.recipeInstructions);
-  console.log("Porciones por edad:", receta.yieldPerAge);
+  console.log(receta);
 }).catch(error => {
   console.error("Error:", error);
 });
