@@ -90,17 +90,7 @@ async function getDataFromWebPage() {
 }
 
 getDataFromWebPage().then(receta => {
-  console.log("Título:", receta.titulo);
-  console.log("Imagen:", receta.imagen);
-  console.log("URL:", receta.url);
-  console.log("Datos de la receta:", receta.recipeData);
-  console.log("Necesidades especiales:", receta.specialNeeds);
-  console.log("Información nutricional:", receta.nutritionalInfo);
-  console.log("Información adicional:", receta.additionalInfo);
-  console.log("Ingredientes de la receta:", receta.recipeIngredients);
-  console.log("Categoría de la receta:", receta.recipeCategory);
-  console.log("Instrucciones de la receta:", receta.recipeInstructions);
-  console.log("Porciones por edad:", receta.yieldPerAge);
+  console.log(receta);
 }).catch(error => {
   console.error("Error:", error);
 });
