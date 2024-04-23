@@ -20,11 +20,12 @@ const recipeSchema = new Schema({
          minlength: 5,
          maxlength: 255
       },
-      recipeData: [
-         {dificulty: String},
-         {yield: String},
-         {preparationTime: String},
-         {cockingTime: String},
-      ]
+      recipeData: {
+         dificulty: String,
+         yield: String,
+         preparationTime: String,
+         cockingTime: String,
+         required: true
+      }
 
    });
