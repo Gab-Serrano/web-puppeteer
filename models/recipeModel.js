@@ -21,7 +21,7 @@ const recipeSchema = new Schema({
         maxlength: 255
     },
     recipeData: {
-        dificulty: {
+        difficulty: {
             type: String,
             required: true,
             minlength: 5,
@@ -50,23 +50,23 @@ const recipeSchema = new Schema({
     },
     nutritionalInfo: {
         totalKcal: {
-            type: Number,
+            type: String,
             required: true,
         },
         fat: {
             kcal: { type: String, required: true },
             gr: { type: String, required: true },
-            porcentage: { type: Number, required: true }
+            porcentage: { type: String, required: true }
         },
         carbohydrates: {
             kcal: { type: String, required: true },
             gr: { type: String, required: true },
-            porcentage: { type: Number, required: true }
+            porcentage: { type: String, required: true }
         },
         protein: {
             kcal: { type: String, required: true },
             gr: { type: String, required: true },
-            porcentage: { type: Number, required: true }
+            porcentage: { type: String, required: true }
         },
         additionalInfo: {
             sugars: { type: String, required: true },
@@ -90,7 +90,7 @@ const recipeSchema = new Schema({
         required: true
     },
     chefTips: {
-        type: [String],
+        type: String,
         required: false
     },
     tags: {
