@@ -129,9 +129,17 @@ async function getDataFromWebPage(url) {
     const teenPortion =
       portionByAgeElement.querySelector(".teen p.text").innerText;
 
-    const chefTips = document
-      .querySelector(".chef_trick > span")
-      .nextSibling.textContent.trim();
+      let chefTips = '';
+      try {
+          const chefTipElement = document.querySelector(".chef_trick > span").nextSibling;
+          if (chefTipElement) {
+              chefTips = chefTipElement.textContent.trim();
+          }
+      } catch (error) {
+          console.error("Error al scrapear la receta:", error);
+      }
+      
+      
 
     return {
       title,
