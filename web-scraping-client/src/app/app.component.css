@@ -1,0 +1,19 @@
+.container{
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   background-color: #937569;
+   padding: 3rem;
+   border-radius: 25px;
+   gap: 1rem;
+}
+
+h1 {
+   text-align: center;
+   color: #FFFAF2;
+}
+
+app-url-form{
+   width: 100%;
+}
