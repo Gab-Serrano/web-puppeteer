@@ -1,3 +1,7 @@
 /node_modules
 /web-scraping-client/.angular
 /web-scraping-client/node_modules
+/web-scraping-exe/node_modules
+/web-scraping-exe/dist
+/web-scraping-exe/out
+/web-scraping-exe/out/*
