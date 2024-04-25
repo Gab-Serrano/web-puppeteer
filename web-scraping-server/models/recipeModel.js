@@ -56,22 +56,22 @@ const recipeSchema = new Schema({
         fat: {
             kcal: { type: String, required: true },
             gr: { type: String, required: true },
-            porcentage: { type: String, required: true }
+            percent: { type: String, required: true }
         },
         carbohydrates: {
             kcal: { type: String, required: true },
             gr: { type: String, required: true },
-            porcentage: { type: String, required: true }
+            percent: { type: String, required: true }
         },
         protein: {
             kcal: { type: String, required: true },
             gr: { type: String, required: true },
-            porcentage: { type: String, required: true }
+            percent: { type: String, required: true }
         },
         additionalInfo: {
-            sugars: { type: String, required: true },
+            sugar: { type: String, required: true },
             fiber: { type: String, required: true },
-            saturatedFats: { type: String, required: true },
+            saturatedFat: { type: String, required: true },
             salt: { type: String, required: true }
         }
     },
