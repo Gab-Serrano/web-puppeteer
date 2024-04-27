@@ -119,16 +119,53 @@ async function getDataFromWebPage(url) {
         )
       : [];
 
-    const portionByAgeElement = document.querySelector(".dishes_container");
-    const adultPortion =
-      portionByAgeElement.querySelector(".adult p.text").innerText;
-    const threeToEightPortion =
-      portionByAgeElement.querySelector(".child p.text").innerText;
-    const nineToTwelvePortion =
-      portionByAgeElement.querySelector(".preteen p.text").innerText;
-    const teenPortion =
-      portionByAgeElement.querySelector(".teen p.text").innerText;
+  const portionByAgeElement = document.querySelector(".dishes_container");
 
+
+  let adultPortion = ' ';
+  try {
+  const adultPortionElement = portionByAgeElement.querySelector(".adult p.text");
+  if (adultPortionElement) {
+  adultPortion = adultPortionElement.innerText.trim();
+  }
+  } catch (error) {
+  console.error("Error al obtener la porción para adultos:", error);
+  }
+
+  let threeToEightPortion = ' ';
+  try {
+  const threeToEightPortionElement = portionByAgeElement.querySelector(".child p.text");
+  if (threeToEightPortionElement) {
+  threeToEightPortion = threeToEightPortionElement.innerText.trim();
+  }
+  else {
+    threeToEightPortion = portionByAgeElement.querySelector(".sweet p.text").innerText.trim();
+  }
+  } catch (error) {
+  console.error("Error al obtener la porción para niños de 3 a 8 años:", error);
+  }
+
+  let nineToTwelvePortion = ' ';
+  try {
+  const nineToTwelvePortionElement = portionByAgeElement.querySelector(".preteen p.text");
+  if (nineToTwelvePortionElement) {
+  nineToTwelvePortion = nineToTwelvePortionElement.innerText.trim();
+  }
+  } catch (error) {
+  console.error("Error al obtener la porción para niños de 9 a 12 años:", error);
+  }
+
+  let teenPortion = ' ';
+  try {
+  const teenPortionElement = portionByAgeElement.querySelector(".teen p.text");
+  if (teenPortionElement) {
+  teenPortion = teenPortionElement.innerText.trim();
+  }
+  } catch (error) {
+  console.error("Error al obtener la porción para adolescentes:", error);
+  }
+
+    
       let chefTips = '';
       try {
           const chefTipElement = document.querySelector(".chef_trick > span").nextSibling;
